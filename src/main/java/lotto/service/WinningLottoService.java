@@ -1,4 +1,4 @@
-package lotto.controller;
+package lotto.service;
 
 import static lotto.utils.Converter.convertToInt;
 import static lotto.utils.Converter.splitBySeparator;
@@ -9,56 +9,57 @@ import static lotto.view.OutputView.printErrorMessage;
 import java.util.List;
 import lotto.domain.Lotto;
 import lotto.domain.WinningLotto;
+import lotto.exception.LottoGameException;
 import lotto.view.InputView;
 
-public class WinningLottoController {
-    
+public class WinningLottoService {
+
     public WinningLotto receiveWinningLotto() {
         try {
             final Lotto winningNumbers = receiveWinningNumbers();
             return receiveWinningLottoWithBonusNumber(winningNumbers);
-        } catch (IllegalArgumentException exception) {
+        } catch (LottoGameException exception) {
             printErrorMessage(exception);
             return receiveWinningLotto();
         }
     }
-    
-    private WinningLotto receiveWinningLottoWithBonusNumber(Lotto winningNumbers) {
+
+    private WinningLotto receiveWinningLottoWithBonusNumber(final Lotto winningNumbers) {
         printEnterBonusNumber();
         return repeatUntilReceiveWinningLotto(winningNumbers);
     }
-    
-    private WinningLotto repeatUntilReceiveWinningLotto(Lotto winningNumbers) {
+
+    private WinningLotto repeatUntilReceiveWinningLotto(final Lotto winningNumbers) {
         try {
             final Integer bonusNumber = repeatUntilReceiveBonusNumber();
             return WinningLotto.of(winningNumbers, bonusNumber);
-        } catch (IllegalArgumentException exception) {
+        } catch (LottoGameException exception) {
             printErrorMessage(exception);
             return repeatUntilReceiveWinningLotto(winningNumbers);
         }
     }
-    
+
     private int repeatUntilReceiveBonusNumber() {
         try {
             final String input = InputView.readLine();
             return convertToInt(input);
-        } catch (IllegalArgumentException exception) {
+        } catch (LottoGameException exception) {
             printErrorMessage(exception);
             return repeatUntilReceiveBonusNumber();
         }
     }
-    
+
     private Lotto receiveWinningNumbers() {
         printEnterWinningNumbers();
         return repeatUntilReceiveWinningNumbers();
     }
-    
+
     private Lotto repeatUntilReceiveWinningNumbers() {
         try {
             final String input = InputView.readLine();
-            List<Integer> winningNumbers = splitBySeparator(input);
+            final List<Integer> winningNumbers = splitBySeparator(input);
             return new Lotto(winningNumbers);
-        } catch (IllegalArgumentException exception) {
+        } catch (LottoGameException exception) {
             printErrorMessage(exception);
             return repeatUntilReceiveWinningNumbers();
         }

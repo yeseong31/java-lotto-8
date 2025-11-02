@@ -1,4 +1,8 @@
-package lotto.domain.constants;
+package lotto.enums;
+
+import static lotto.constants.SeparatorConstant.DECIMAL_FORMAT;
+
+import java.text.DecimalFormat;
 
 public enum WinningPrize {
 
@@ -17,7 +21,12 @@ public enum WinningPrize {
         this.price = price;
     }
 
-    public long getPrice() {
-        return price;
+    public long receiveMultipleValue(long value) {
+        return price * value;
+    }
+
+    public String receiveFormattedPrice() {
+        final DecimalFormat decimalFormat = new DecimalFormat(DECIMAL_FORMAT);
+        return decimalFormat.format(price);
     }
 }
